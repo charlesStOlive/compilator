@@ -1,0 +1,13 @@
+<?php
+$href = '#';
+if($record->src_explication) $href=$record->src_explication->getPath();
+?>
+<a href='<?=$href?>' style='text-decoration: none;'>
+    <?php if($record->use_icon) { ?>
+    <i class="<?=$record->icon?> icon-lg"></i></a>
+<?php } elseif($record->icon_png) { ?>
+<img height=25 src="<?=$record->icon_png->getPath() ?>" />
+<?php } else { ?>
+<i class="icon-question icon-lg"></i>
+<?php } ?>
+</a>

@@ -1,0 +1,40 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    sector:
+        label: waka.compilator::lang.content.sector
+        type: dropdown
+        options: listNestedSector
+    data: 
+        type: repeater
+        minItems: 1
+        prompt: waka.compilator::lang.contents.mediastextes.data_prompt
+        form:
+            fields:
+                value:
+                    label: waka.compilator::lang.contents.mediastextes.value
+                    type: textarea
+                    size: small
+                path:
+                    label: waka.compilator::lang.contents.mediastextes.path
+                    type: mediafinder
+                    mode: image
+                width:
+                    label: waka.compilator::lang.contents.linkedphoto.width
+                    comment: waka.compilator::lang.contents.linkedphoto.width_explication
+                    default: 165
+                    span: auto
+                height:
+                    label: waka.compilator::lang.contents.linkedphoto.height
+                    default: 165
+                    span: auto
+                keep_ratio: 
+                    label: waka.compilator::lang.contents.linkedphoto.keep_ratio
+                    default: 1
+                    type: checkbox
+
+            
+
+

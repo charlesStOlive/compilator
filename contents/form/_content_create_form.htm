@@ -1,0 +1,40 @@
+<?= Form::open() ?>
+
+<input type="hidden" name="manage_id" value="<?= $orderId ?>" />
+
+<div class="report-widget">
+
+    <h5>
+        <?php if($update) { ?>
+        <?=e(trans('waka.compilator::lang.content.update_content'))?>
+        <?php } else { ?>
+        <?=e(trans('waka.compilator::lang.content.create_content'))?>
+        <?php } ?>
+    </h5>
+
+
+
+    <?= $behaviorWidget->render() ?>
+
+
+
+    <?php if($update) { ?>
+    <button data-stripe-load-indicator type="submit" data-request="onUpdateContent"
+        data-request-data="record_id: '<?= $recordId ?>'" class="btn btn-primary">
+        <?=e(trans('waka.utils::lang.global.update'))?>
+    </button>
+    <?php } else { ?>
+    <button data-stripe-load-indicator type="submit" data-request="onCreateItem" data-request-data="redirect:0"
+        data-hotkey="ctrl+s, cmd+s" class="btn btn-primary">
+        <?=e(trans('waka.utils::lang.global.create'))?>
+    </button>
+    <?php } ?>
+    <button data-stripe-load-indicator type="submit" data-request="onCancelContent" data-request-data="redirect:0"
+        data-hotkey="ctrl+s, cmd+s" class="btn btn-primary">
+        <?=e(trans('waka.utils::lang.global.cancel'))?>
+    </button>
+
+
+</div>
+
+<?= Form::close() ?>

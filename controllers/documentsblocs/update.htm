@@ -1,0 +1,30 @@
+<!-- Primary content -->
+<?php Block::put('form-contents') ?>
+<div id="side-content" class="hide-tabs">Ici du contenu</div>
+
+<?php Block::endPut() ?>
+
+<!-- Complimentary sidebar -->
+<?php Block::put('form-sidebar') ?>
+<?php Block::put('breadcrumb') ?>
+<!-- <ul>
+    <li><a href="<?= Backend::url('waka/compilator/documents') ?>">Bloc Names</a></li>
+    <li><?= e($this->pageTitle) ?></li>
+</ul> -->
+<?php Block::endPut() ?>
+<!--<div class="layout-row">
+    <div class="form-buttons">
+        <?= $this->fireViewEvent('backend.top.update') ?>
+        <?= $this->fireViewEvent('backend.crsm.updateView') ?>
+    </div>
+    
+</div>-->
+<?= $this->formRender() ?>
+<?php Block::endPut() ?>
+
+<!-- Layout execution -->
+<?php Block::put('body') ?>
+<?= Form::open(['class'=>'layout stretch']) ?>
+<?= $this->makeLayout('form-half-sidebar') ?>
+<?= Form::close() ?>
+<?php Block::endPut() ?>

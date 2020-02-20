@@ -1,0 +1,10 @@
+<?= Form::open() ?>
+<ul>
+    <li>Nom :<?= $blocModel->name ?></li>
+    <li>code : </li>
+    <li>Parent model : </li>
+</ul>
+
+
+<?=  $this->widget->myduplicateformWidget->render() ?>
+<?= Form::close() ?>

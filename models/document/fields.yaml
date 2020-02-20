@@ -1,0 +1,42 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    title@update:
+        type: informfield
+        valueFrom: name
+    name@create:
+        label: waka.compilator::lang.document.name
+    path:
+        label: waka.compilator::lang.document.path
+        type: mediafinder
+        span: auto 
+    data_source@create:
+        label: waka.compilator::lang.document.data_source
+        placeholder: waka.compilator::lang.document.data_source_placeholder
+        type: relation
+        select: name
+        span: auto 
+    data_source@update:
+        label: waka.compilator::lang.document.data_source
+        placeholder: waka.compilator::lang.document.data_source_placeholder
+        type: relation
+        select: name
+        span: auto
+        disabled: true
+
+
+    # has_sectors_perso:
+    #     label: waka.compilator::lang.document.has_sectors_perso
+    #     type: checkbox
+    #     default: 0
+    blocs@update:
+        type: partial
+        path: field_blocs
+    # analyze@update:
+    #     label: waka.compilator::lang.document.analyse
+    #     type: textarea
+    #     size: huge
+    
+    

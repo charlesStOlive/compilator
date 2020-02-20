@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Document
+
+# Model Form Field configuration
+form: $/waka/compilator/models/document/fields_rel_blocs.yaml
+
+# Model Class name
+modelClass: Waka\Compilator\Models\Document
+
+# Default redirect location
+defaultRedirect: waka/compilator/documents
+
+# Create page
+create:
+    title: Create Document
+    redirect: waka/compilator/documentsblocs/update/:id
+    redirectClose: waka/compilator/documents
+
+# Update page
+update:
+    title: Edit Document
+    redirect: waka/compilator/documents
+    redirectClose: waka/compilator/documents
+
+# Preview page
+preview:
+    title: Preview Document

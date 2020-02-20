@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Bloc Type
+
+# Model Form Field configuration
+form: $/waka/compilator/models/bloctype/fields.yaml
+
+# Model Class name
+modelClass: Waka\Compilator\Models\BlocType
+
+# Default redirect location
+defaultRedirect: waka/compilator/bloctypes
+
+# Create page
+create:
+    title: Create Bloc Type
+    redirect: waka/compilator/bloctypes/update/:id
+    redirectClose: waka/compilator/bloctypes
+
+# Update page
+update:
+    title: Edit Bloc Type
+    redirect: waka/compilator/bloctypes
+    redirectClose: waka/compilator/bloctypes
+
+# Preview page
+preview:
+    title: Preview Bloc Type

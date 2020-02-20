@@ -1,0 +1,14 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: waka.compilator::lang.bloc.name
+        comment: waka.compilator::lang.bloc.name_ex
+    code:
+        label: waka.utils::lang.global.code
+    bloc_type:
+        label: waka.compilator::lang.bloc.bloc_type
+        type: relation
+    

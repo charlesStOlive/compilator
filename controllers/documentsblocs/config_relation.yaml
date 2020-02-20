@@ -1,0 +1,21 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+
+
+
+blocs:
+    label: waka.compilator::lang.bloc.code
+    manage:
+        form: $/waka/compilator/models/bloc/fields.yaml
+        list: $/waka/compilator/models/bloc/columns.yaml
+    view:
+        list: $/waka/compilator/models/bloc/columns_for_document.yaml
+        toolbarButtons: create|delete
+        defaultSort:
+            column: sort_order
+            direction: asc
+
+
+
