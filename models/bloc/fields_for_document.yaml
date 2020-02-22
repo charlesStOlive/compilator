@@ -6,9 +6,16 @@ fields:
     name:
         label: waka.compilator::lang.bloc.name
         comment: waka.compilator::lang.bloc.name_ex
-    code:
+    code@create:
         label: waka.utils::lang.global.code
-    bloc_type:
+    code@update:
+        label: waka.utils::lang.global.code
+        readOnly: true
+    bloc_type@create:
         label: waka.compilator::lang.bloc.bloc_type
         type: relation
+    bloc_type@update:
+        label: waka.compilator::lang.bloc.bloc_type
+        type: relation
+        readOnly: true
     

@@ -19,6 +19,8 @@ return [
         'code' => 'Code',
         'version' => 'Les versions',
         'nb_content' => 'Variante',
+        'opt_section' => 'Liste des options',
+        'opt_section_com' => "Si vide : pas d'options",
     ],
     'bloc_name' => [
         'name' => 'Intitulé',
@@ -38,8 +40,9 @@ return [
         'ajax_method' => 'Méthode Ajax',
         'use_icon' => 'Utiliser une icone October',
         'icon_png' => 'Utiliser une icone PNG',
-        'compiler' => 'Model Source du compilateur',
         'scr_explication' => 'Fichier Word d explication du bloc',
+        'datasource_accepted' => 'Model reservé pour les sources : ',
+        'datasource_accepted_comment' => 'Vide si fonctionne avec tous les modèles',
     ],
     'document' => [
         'name' => 'Nom',

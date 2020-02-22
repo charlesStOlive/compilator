@@ -90,4 +90,15 @@ class BlocType extends Model
     {
         return DataSource::lists('name', 'id');
     }
+
+    public function filterFields($fields, $context = null)
+    {
+        $user = \BackendAuth::getUser();
+        if (!$user->hasAccess('waka.compilator.superAdmin')) {
+            $fields->type->hidden = true;
+            $fields->code->readOnly = true;
+            $fields->config->hidden = true;
+            $fields->datasource_accepted->readOnly = true;
+        }
+    }
 }

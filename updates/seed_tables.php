@@ -12,7 +12,7 @@ class SeedTables extends Seeder
 {
     public function run()
     {
-        $this->call('Waka\Crsm\Updates\Seeders\SeedCompilator');
+        //$this->call('Waka\Crsm\Updates\Seeders\SeedCompilator');
 
     }
 }

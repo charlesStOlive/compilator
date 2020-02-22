@@ -17,8 +17,6 @@ class Documents extends Controller
         'Backend.Behaviors.RelationController',
         'Waka.Informer.Behaviors.PopupInfo',
         'Waka.Compilator.Behaviors.WordBehavior',
-        'Waka.Compilator.Contents.ContentStaticConfig',
-
     ];
 
     public $formConfig = 'config_form.yaml';
@@ -143,9 +141,9 @@ class Documents extends Controller
             if (count($options) > 0 ?? false) {
                 $fieldtoAdd = [
                     'bloc_form' => [
-                        'label' => 'Option',
                         'tab' => 'content',
                         'type' => 'nestedform',
+                        'usePanelStyles' => false,
                         'form' => [
                             'fields' => $options,
                         ],

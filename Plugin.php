@@ -109,12 +109,18 @@ class Plugin extends PluginBase
      */
     public function registerPermissions()
     {
-        return []; // Remove this line to activate
-
         return [
-            'waka.compilator.some_permission' => [
-                'tab' => 'Compilator',
-                'label' => 'Some permission',
+            'waka.compilator.admin.super' => [
+                'tab' => 'Waka',
+                'label' => 'Administrateur de Compilator',
+            ],
+            'waka.compilator.admin' => [
+                'tab' => 'Waka',
+                'label' => 'Administrateur de Compilator',
+            ],
+            'waka.compilator.user' => [
+                'tab' => 'Waka',
+                'label' => 'Utilisateur de Compilator',
             ],
         ];
     }
@@ -138,6 +144,7 @@ class Plugin extends PluginBase
                 'category' => Lang::get('waka.compilator::lang.menu.settings_category'),
                 'icon' => 'icon-file-word-o',
                 'url' => Backend::url('waka/compilator/documents'),
+                'permissions' => ['waka.compilator.admin'],
                 'order' => 1,
             ],
             'bloc_types' => [
@@ -146,6 +153,7 @@ class Plugin extends PluginBase
                 'category' => Lang::get('waka.compilator::lang.menu.settings_category'),
                 'icon' => 'icon-th-large',
                 'url' => Backend::url('waka/compilator/bloctypes'),
+                'permissions' => ['waka.compilator.admin'],
                 'order' => 1,
             ],
         ];

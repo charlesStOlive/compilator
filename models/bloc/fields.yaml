@@ -5,6 +5,10 @@
 tabs:
     defaultTab: content
     fields:
+        options_section:
+            label: waka.compilator::lang.bloc.opt_section
+            type: section
+            comment: waka.compilator::lang.bloc.opt_section_com
         name@create:
             label: waka.compilator::lang.bloc.name
             comment: waka.compilator::lang.bloc.name_ex
@@ -29,10 +33,13 @@ tabs:
             preset: _name
             span: auto
             tab: bloc info
+            readOnly: true
         bloc_type@update:
             label: waka.compilator::lang.bloc.bloc_type
             type: relation
             default: 2
             tab: bloc info
+            readOnly: true
+        
         
         
