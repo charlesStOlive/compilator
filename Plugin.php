@@ -77,7 +77,7 @@ class Plugin extends PluginBase
             }
 
             if (in_array('Waka.Compilator.Behaviors.WordBehavior', $controller->implement)) {
-                trace_log("Laligne 1 est ici");
+                //trace_log("Laligne 1 est ici");
                 $data = [
                     'model' => str_replace('\\', '\\\\', $model),
                     'modelId' => $id,
