@@ -8,15 +8,24 @@ class WordCreator extends WordProcessor
 
     private $dataSourceModel;
     private $dataSourceId;
+    private $additionalParams;
+    private $dataSourceAdditionalParams;
 
     use \Waka\Cloudis\Classes\Traits\CloudisKey;
 
     public function prepareCreatorVars($dataSourceId)
     {
         $this->dataSourceModel = $this->linkModelSource($dataSourceId);
+        $this->dataSourceAdditionalParams = $this->dataSourceModel->hasRelationArray;
         $this->keyBlocs = $this->getKeyGroups('bloc');
         $this->keyRows = $this->getKeyGroups('row');
-        $this->apiInjections = $this->getApiInjections();
+        $this->dotedValues = $this->getDotedValues();
+    }
+    public function setAdditionalParams($additionalParams)
+    {
+        if ($additionalParams) {
+            $this->additionalParams = $additionalParams;
+        }
     }
     private function linkModelSource($dataSourceId)
     {
@@ -26,6 +35,7 @@ class WordCreator extends WordProcessor
             $this->dataSourceId = $this->document->data_source->test_id;
         }
         //on enregistre le modèle
+        trace_log($this->document->data_source->modelClass);
         return $this->document->data_source->modelClass::find($this->dataSourceId);
     }
     public function renderWord($dataSourceId)
@@ -38,7 +48,7 @@ class WordCreator extends WordProcessor
         // }
         //Traitement des champs simples
         foreach ($originalTags['injections'] as $injection) {
-            $value = $this->apiInjections[$injection];
+            $value = $this->dotedValues[$injection];
             $this->templateProcessor->setValue($injection, $value);
         }
         //trace_log("image Key ");
@@ -72,34 +82,6 @@ class WordCreator extends WordProcessor
 
                     } else {
                         $this->templateProcessor->setValue($cle . '#' . $i, $data, 1);
-                    }
-
-                }
-                $i++;
-            }
-        }
-        //trace_log($this->keyRows);
-        //Traitement des ROWS | je n'utilise pas les tags d'origine mais les miens.
-        foreach ($this->keyRows as $key => $rows) {
-            $count = count($rows);
-            //trace_log("foreach---------------------------".$key.' count '.$count);
-            $this->templateProcessor->cloneRow($key, $count);
-            //trace_log('all tags-------***');
-            //trace_log($this->templateProcessor->getVariables());
-            //trace_log('end all tags-------');
-            $i = 1;
-            foreach ($rows as $row) {
-                //trace_log($row);
-                //trace_log("--------foreachkey------------------------");
-                foreach ($row as $cle => $data) {
-                    //trace_log($cle.'#'.$i);
-                    //trace_log($data);
-                    if (starts_with($cle, 'row.image')) {
-                        //trace_log("c'est une image");
-                        $this->templateProcessor->setImageValue($cle . '#' . $i, $data);
-                    } else {
-                        //trace_log("c'est PAS img");
-                        $this->templateProcessor->setValue($cle . '#' . $i, $data);
                     }
 
                 }
@@ -146,9 +128,23 @@ class WordCreator extends WordProcessor
         return $compiledBlocs;
     }
 
-    public function getApiInjections()
+    public function getDotedValues()
     {
-        return $this->document->data_source->listApi($this->dataSourceId);
+        $array = [];
+        if (count($this->additionalParams)) {
+            $rel = $this->document->data_source->getDotedRelationValues($this->dataSourceId, $this->additionalParams);
+            //trace_log($rel);
+            $array = array_merge($array, $rel);
+            trace_log($array);
+        }
+
+        $rel = $this->document->data_source->getDotedValues($this->dataSourceId);
+        //trace_log($rel);
+        $array = array_merge($array, $rel);
+
+        trace_log($array);
+        return $array;
+
     }
 
     private function rebuildTag($bloc)

@@ -23,7 +23,7 @@ class WordProcessor
     public $dataSourceName;
     public $sector;
     public $apiBlocs;
-    public $apiInjections;
+    public $dotedValues;
     public $originalTags;
     public $nbErrors;
 
@@ -138,7 +138,7 @@ class WordProcessor
      */
     public function checkInjection($tag)
     {
-        $ModelVarArray = $this->document->data_source->listApi();
+        $ModelVarArray = $this->document->data_source->getDotedValues();
         if (!array_key_exists($tag, $ModelVarArray)) {
             $this->recordInform('problem', Lang::get('waka.compilator::lang.word.processor.field_not_existe') . ' : ' . $tag);
             return false;

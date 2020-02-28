@@ -40,7 +40,6 @@ class Documents extends Controller
     public function onTestList()
     {
         $model = \Waka\Compilator\Models\Document::find($this->params[0]);
-        //trace_log($model->data_source->listApi());
     }
 
     public function onCreateItem()
