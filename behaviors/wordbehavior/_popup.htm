@@ -13,7 +13,7 @@
                 <option value="<?=$key?>"><?=$value?></option>
                 <?php } ?>
             </select>
-            <?php if($relations) {
+            <?php if(isset($relations)) {
                 foreach($relations as $relation)  { ?>
             <div class="m-t-md">
                 <select class="form-control custom-select m-t-md" name="<?=$relation['param']?>">

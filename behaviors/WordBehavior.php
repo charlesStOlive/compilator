@@ -35,7 +35,9 @@ class WordBehavior extends ControllerBehavior
         $this->vars['options'] = $options;
         $this->vars['modelId'] = $modelId;
         $this->vars['dataSrcId'] = $dataSource->id;
-        $this->vars['relations'] = $relations;
+        if ($relations->count()) {
+            $this->vars['relations'] = $relations;
+        }
 
         return $this->makePartial('$/waka/compilator/behaviors/wordbehavior/_popup.htm');
     }
@@ -51,13 +53,18 @@ class WordBehavior extends ControllerBehavior
         //On recherche la collection de relations si elle existe, sinon retourne null
         $relations = $dataSource->getRelationCollection($modelId);
 
+        trace_log("Relations");
+        trace_log($relations);
+
         $options = Document::whereHas('data_source', function ($query) use ($modelClassName) {
             $query->where('model', '=', $modelClassName);
         })->lists('name', 'id');
         //
         $this->vars['options'] = $options;
         $this->vars['modelId'] = $modelId;
-        $this->vars['relations'] = $relations;
+        if ($relations->count()) {
+            $this->vars['relations'] = $relations;
+        }
 
         return [
             '#popupActionContent' => $this->makePartial('$/waka/compilator/behaviors/wordbehavior/_content.htm'),

@@ -131,11 +131,13 @@ class WordCreator extends WordProcessor
     public function getDotedValues()
     {
         $array = [];
-        if (count($this->additionalParams)) {
-            $rel = $this->document->data_source->getDotedRelationValues($this->dataSourceId, $this->additionalParams);
-            //trace_log($rel);
-            $array = array_merge($array, $rel);
-            trace_log($array);
+        if ($this->additionalParams) {
+            if (count($this->additionalParams)) {
+                $rel = $this->document->data_source->getDotedRelationValues($this->dataSourceId, $this->additionalParams);
+                //trace_log($rel);
+                $array = array_merge($array, $rel);
+                trace_log($array);
+            }
         }
 
         $rel = $this->document->data_source->getDotedValues($this->dataSourceId);
