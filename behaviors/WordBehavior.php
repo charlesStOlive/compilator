@@ -72,6 +72,12 @@ class WordBehavior extends ControllerBehavior
     }
     public function onWordBehaviorPopupValidation()
     {
+        $errors = $this->CheckValidation(\Input::all());
+        trace_log($errors);
+        if ($errors) {
+            throw new \ValidationException(['error' => $errors]);
+        }
+
         $docId = post('documentId');
         $modelId = post('modelId');
 
@@ -81,15 +87,54 @@ class WordBehavior extends ControllerBehavior
 
         $additionalParams = "";
         if ($relations) {
-            trace_log("relations");
             foreach ($relations as $relation) {
-                trace_log($relation['param']);
-                $additionalParams .= '&' . $relation['param'] . '=' . post($relation['param']);
+                if (!post($relation['param'])) {
+                    throw new \ValidationException(['error' => 'il manque ' . $relation['param']]);
+                } else {
+                    $additionalParams .= '&' . $relation['param'] . '=' . post($relation['param']);
+                }
+
             }
         }
 
         return Redirect::to('/backend/waka/compilator/documents/makeword/?docId=' . $docId . '&modelId=' . $modelId . $additionalParams);
 
+    }
+    /**
+     * Validation
+     */
+    public function CheckValidation($inputs)
+    {
+        trace_log("Validation");
+        trace_log($inputs);
+        $rules = [
+            'modelId' => 'required',
+            'documentId' => 'required',
+        ];
+
+        $validator = \Validator::make($inputs, $rules);
+
+        if ($validator->fails()) {
+            return $validator->messages()->first();
+        } else {
+            return false;
+        }
+    }
+    public function validationAdditionalParams($field, $input, $fieldOption = null)
+    {
+        trace_log($field);
+        trace_log($input);
+        $rules = [
+            $field => 'required',
+        ];
+
+        $validator = \Validator::make([$input], $rules);
+
+        if ($validator->fails()) {
+            return $validator->messages()->first();
+        } else {
+            return false;
+        }
     }
     /**
      * Cette fonction est utilisé lors du test depuis le controller document.
