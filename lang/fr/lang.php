@@ -53,6 +53,11 @@ return [
         'data_source_placeholder' => 'Choisissez une source de données',
         'download' => 'Télécharger un exemple',
         'check' => 'Vérifier',
+        'scopes' => 'limiter le document pour une cible ',
+        'scopes_prompt' => 'Ajouter des limites',
+        'scopes_target' => 'cible ou relation cible',
+        'scopes_field' => 'Champ de la cible',
+        'scopes_name' => 'Valeur de la cible',
     ],
     'objtext' => [
         'data' => 'Paragraphes',

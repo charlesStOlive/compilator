@@ -50,7 +50,7 @@ class Document extends Model
     /**
      * @var array Attributes to be cast to JSON
      */
-    protected $jsonable = [];
+    protected $jsonable = ['scopes'];
 
     /**
      * @var array Attributes to be appended to the API representation of the model (ex. toArray())
@@ -102,5 +102,10 @@ class Document extends Model
     public function listContacts()
     {
         return \Waka\Crsm\Models\Contact::lists('name', 'id');
+    }
+
+    public function getList()
+    {
+
     }
 }

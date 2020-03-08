@@ -12,19 +12,34 @@ fields:
         label: waka.compilator::lang.document.path
         type: mediafinder
         span: auto 
+    
+
+
     data_source@create:
         label: waka.compilator::lang.document.data_source
         placeholder: waka.compilator::lang.document.data_source_placeholder
         type: relation
         select: name
-        span: auto 
+        span: left 
+    
     data_source@update:
         label: waka.compilator::lang.document.data_source
         placeholder: waka.compilator::lang.document.data_source_placeholder
         type: relation
         select: name
-        span: auto
+        span: left
         disabled: true
+    scopes:
+        label: waka.compilator::lang.document.scopes
+        type: repeater
+        prompt: waka.compilator::lang.document.scopes_prompt
+        span: right
+        form:
+            fields:
+                target:
+                    label: waka.compilator::lang.document.scopes_target
+                id:
+                    label: waka.compilator::lang.document.scopes_field
 
 
     # has_sectors_perso:

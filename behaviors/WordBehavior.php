@@ -16,25 +16,90 @@ class WordBehavior extends ControllerBehavior
         $this->wordBehaviorWidget = $this->createWordBehaviorWidget();
     }
 
+    /**
+     * METHODES
+     */
+
+    public function getDataSourceClassName(String $model)
+    {
+        $modelClassDecouped = explode('\\', $model);
+        return array_pop($modelClassDecouped);
+
+    }
+
+    public function getDataSourceFromModel(String $model)
+    {
+        $modelClassName = $this->getDataSourceClassName($model);
+        //On recherche le data Source depuis le nom du model
+        return \Waka\Utils\Models\DataSource::where('model', '=', $modelClassName)->first();
+    }
+
+    public function getModel($model, $modelId)
+    {
+        $myModel = $model::find($modelId);
+        return $myModel;
+    }
+    public function checkScopes($myModel, $scopes)
+    {
+        $result = false;
+
+        foreach ($scopes as $scope) {
+            $test = false;
+            if ($scope['target'] != 'self') {
+                $test = $myModel->{$scope['target']}->id == $scope['id'];
+            } else {
+                $test = $myModel->id == $scope['id'];
+            }
+            if ($test) {
+                return true;
+            }
+
+        }
+        return false;
+
+    }
+
+    public function getPartialOptions($model, $modelId)
+    {
+        $modelClassName = $this->getDataSourceClassName($model);
+
+        $options = Document::whereHas('data_source', function ($query) use ($modelClassName) {
+            $query->where('model', '=', $modelClassName);
+        });
+
+        $myModel = $this->getModel($model, $modelId);
+
+        $optionsList = [];
+
+        foreach ($options->get() as $option) {
+            if ($option->scopes) {
+                if ($this->checkScopes($myModel, $option->scopes)) {
+                    $optionsList[$option->id] = $option->name;
+                }
+            } else {
+                $optionsList[$option->id] = $option->name;
+            }
+        }
+        return $optionsList;
+
+    }
+    /**
+     * LOAD DES POPUPS
+     */
     public function onLoadWordBehaviorPopupForm()
     {
         $model = post('model');
         $modelId = post('modelId');
 
-        $modelClassDecouped = explode('\\', $model);
-        $modelClassName = array_pop($modelClassDecouped);
-        //On initialise le dataSource
-        $dataSource = \Waka\Utils\Models\DataSource::where('model', '=', $modelClassName)->first();
+        $dataSource = $this->getDataSourceFromModel($model);
         //On recherche la collection de relations si elle existe, sinon retourne null
         $relations = $dataSource->getRelationCollection($modelId);
 
-        $options = Document::whereHas('data_source', function ($query) use ($modelClassName) {
-            $query->where('model', '=', $modelClassName);
-        })->lists('name', 'id');
+        $options = $this->getPartialOptions($model, $modelId);
 
         $this->vars['options'] = $options;
         $this->vars['modelId'] = $modelId;
-        $this->vars['dataSrcId'] = $dataSource->id;
+        // $this->vars['dataSrcId'] = $dataSource->id;
         if ($relations->count()) {
             $this->vars['relations'] = $relations;
         }
@@ -45,21 +110,13 @@ class WordBehavior extends ControllerBehavior
     {
         $model = post('model');
         $modelId = post('modelId');
-        //
-        $modelClassDecouped = explode('\\', $model);
-        $modelClassName = array_pop($modelClassDecouped);
-        //On initialise le dataSource
-        $dataSource = \Waka\Utils\Models\DataSource::where('model', '=', $modelClassName)->first();
+
+        $dataSource = $this->getDataSourceFromModel($model);
         //On recherche la collection de relations si elle existe, sinon retourne null
         $relations = $dataSource->getRelationCollection($modelId);
 
-        trace_log("Relations");
-        trace_log($relations);
+        $options = $this->getPartialOptions($model, $modelId);
 
-        $options = Document::whereHas('data_source', function ($query) use ($modelClassName) {
-            $query->where('model', '=', $modelClassName);
-        })->lists('name', 'id');
-        //
         $this->vars['options'] = $options;
         $this->vars['modelId'] = $modelId;
         if ($relations->count()) {
@@ -70,10 +127,10 @@ class WordBehavior extends ControllerBehavior
             '#popupActionContent' => $this->makePartial('$/waka/compilator/behaviors/wordbehavior/_content.htm'),
         ];
     }
+
     public function onWordBehaviorPopupValidation()
     {
         $errors = $this->CheckValidation(\Input::all());
-        trace_log($errors);
         if ($errors) {
             throw new \ValidationException(['error' => $errors]);
         }
@@ -100,13 +157,12 @@ class WordBehavior extends ControllerBehavior
         return Redirect::to('/backend/waka/compilator/documents/makeword/?docId=' . $docId . '&modelId=' . $modelId . $additionalParams);
 
     }
+
     /**
-     * Validation
+     * Validations
      */
     public function CheckValidation($inputs)
     {
-        trace_log("Validation");
-        trace_log($inputs);
         $rules = [
             'modelId' => 'required',
             'documentId' => 'required',
@@ -122,8 +178,6 @@ class WordBehavior extends ControllerBehavior
     }
     public function validationAdditionalParams($field, $input, $fieldOption = null)
     {
-        trace_log($field);
-        trace_log($input);
         $rules = [
             $field => 'required',
         ];
@@ -155,15 +209,14 @@ class WordBehavior extends ControllerBehavior
         //On recherche la collection de relations si elle existe, sinon retourne null
         $relations = $dataSource->getRelationCollection($modelId);
         $additionalParams = [];
-        trace_log("Make Word");
+        //trace_log("Make Word");
         if ($relations) {
-            trace_log("Make Word Has relation");
+            //trace_log("Make Word Has relation");
             foreach ($relations as $relation) {
                 $additionalParams[$relation['param']] = post($relation['param']);
             }
         }
-        trace_log("Make Word AdditionalParams");
-        //
+        //trace_log("Make Word AdditionalParams");
         $wc = new WordCreator($docId);
         $wc->setAdditionalParams($additionalParams);
         return $wc->renderWord($modelId);
