@@ -49,6 +49,10 @@ fields:
     blocs@update:
         type: partial
         path: field_blocs
+
+    model_functions:
+            label: Créer des collections à partir des fonctions du modèle
+            type: functionslist
     # analyze@update:
     #     label: waka.compilator::lang.document.analyse
     #     type: textarea

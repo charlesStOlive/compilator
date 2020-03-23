@@ -2,8 +2,8 @@
 
 use Backend\Classes\ControllerBehavior;
 use Redirect;
-use Waka\Compilator\Classes\WordCreator;
-use Waka\Compilator\Classes\WordProcessor;
+use Waka\Compilator\Classes\WordCreator2;
+use Waka\Compilator\Classes\WordProcessor2;
 use Waka\Compilator\Models\Document;
 
 class WordBehavior extends ControllerBehavior
@@ -196,35 +196,36 @@ class WordBehavior extends ControllerBehavior
     public function onLoadWordBehaviorForm()
     {
         $id = post('id');
-        $wp = new WordProcessor($id);
+        $wp = new WordProcessor2($id);
         $tags = $wp->checkTags();
         return Redirect::to('/backend/waka/compilator/documents/makeword/?id=' . $id);
     }
     public function makeword()
     {
-        $docId = post('docId');
+        $docId = post('id');
         $modelId = post('modelId');
         //On initialise le dataSource
         $dataSource = Document::find($docId)->data_source;
         //On recherche la collection de relations si elle existe, sinon retourne null
-        $relations = $dataSource->getRelationCollection($modelId);
-        $additionalParams = [];
+        //$relations = $dataSource->getRelationCollection($modelId);
+        //$additionalParams = [];
         //trace_log("Make Word");
-        if ($relations) {
-            //trace_log("Make Word Has relation");
-            foreach ($relations as $relation) {
-                $additionalParams[$relation['param']] = post($relation['param']);
-            }
-        }
+        // if ($relations) {
+        //     //trace_log("Make Word Has relation");
+        //     foreach ($relations as $relation) {
+        //         $additionalParams[$relation['param']] = post($relation['param']);
+        //     }
+        // }
         //trace_log("Make Word AdditionalParams");
-        $wc = new WordCreator($docId);
-        $wc->setAdditionalParams($additionalParams);
+        $wc = new WordCreator2($docId);
+        //$wc->setAdditionalParams($additionalParams);
         return $wc->renderWord($modelId);
     }
     public function onLoadWordCheck()
     {
+
         $id = post('id');
-        $wp = new WordProcessor($id);
+        $wp = new WordProcessor2($id);
         return $wp->checkDocument();
     }
 
