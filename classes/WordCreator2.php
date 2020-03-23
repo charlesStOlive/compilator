@@ -36,7 +36,6 @@ class WordCreator2 extends WordProcessor2
             $this->dataSourceId = $this->document->data_source->test_id;
         }
         //on enregistre le modèle
-        trace_log($this->document->data_source->modelClass);
         return $this->document->data_source->modelClass::find($this->dataSourceId);
     }
     public function renderWord($dataSourceId)
@@ -64,9 +63,23 @@ class WordCreator2 extends WordProcessor2
         }
         //$this->templateProcessor->cloneRowAndSetValues('row.name.userId', $data);
         //Traitement des BLOCS | je n'utilise pas les tags d'origine mais les miens.
+        trace_log('traitement des fncs');
         foreach ($originalTags['fncs'] as $wordFnc) {
             //$count = count($rows);
             trace_log($wordFnc);
+            $data = $this->document->data_source->getFunctionsCollections($this->dataSourceId, $this->document);
+            //$subTags = $wordFnc['subtags'];
+            // if ($wordFnc['type'] == 'value') {
+            //     trace_log("c'est une value");
+
+            // }
+            // if ($wordFnc['type'] == 'image') {
+            //     trace_log("c'est une image");
+
+            // }
+            trace_log($data);
+            //trace_log($subTags);
+            //foreach()
             //trace_log("foreach---------------------------" . $key . ' count ' . $count);
             //$this->templateProcessor->cloneBlock($key, $count, true, true);
             $i = 1;
