@@ -6,4 +6,8 @@
 1.1.0:
   - 'coucou'
   - create_documents_table_u110.php 
+
+1.2.0:
+- 'ajout de model founction'
+- create_documents_table_u120.php 
   

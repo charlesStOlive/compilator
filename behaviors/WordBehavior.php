@@ -2,8 +2,8 @@
 
 use Backend\Classes\ControllerBehavior;
 use Redirect;
-use Waka\Compilator\Classes\WordCreator;
-use Waka\Compilator\Classes\WordProcessor;
+use Waka\Compilator\Classes\WordCreator2;
+use Waka\Compilator\Classes\WordProcessor2;
 use Waka\Compilator\Models\Document;
 
 class WordBehavior extends ControllerBehavior
@@ -39,25 +39,6 @@ class WordBehavior extends ControllerBehavior
         $myModel = $model::find($modelId);
         return $myModel;
     }
-    public function checkScopes($myModel, $scopes)
-    {
-        $result = false;
-
-        foreach ($scopes as $scope) {
-            $test = false;
-            if ($scope['target'] != 'self') {
-                $test = $myModel->{$scope['target']}->id == $scope['id'];
-            } else {
-                $test = $myModel->id == $scope['id'];
-            }
-            if ($test) {
-                return true;
-            }
-
-        }
-        return false;
-
-    }
 
     public function getPartialOptions($model, $modelId)
     {
@@ -91,18 +72,11 @@ class WordBehavior extends ControllerBehavior
         $model = post('model');
         $modelId = post('modelId');
 
-        $dataSource = $this->getDataSourceFromModel($model);
-        //On recherche la collection de relations si elle existe, sinon retourne null
-        $relations = $dataSource->getRelationCollection($modelId);
-
         $options = $this->getPartialOptions($model, $modelId);
 
         $this->vars['options'] = $options;
         $this->vars['modelId'] = $modelId;
         // $this->vars['dataSrcId'] = $dataSource->id;
-        if ($relations->count()) {
-            $this->vars['relations'] = $relations;
-        }
 
         return $this->makePartial('$/waka/compilator/behaviors/wordbehavior/_popup.htm');
     }
@@ -111,17 +85,10 @@ class WordBehavior extends ControllerBehavior
         $model = post('model');
         $modelId = post('modelId');
 
-        $dataSource = $this->getDataSourceFromModel($model);
-        //On recherche la collection de relations si elle existe, sinon retourne null
-        $relations = $dataSource->getRelationCollection($modelId);
-
         $options = $this->getPartialOptions($model, $modelId);
 
         $this->vars['options'] = $options;
         $this->vars['modelId'] = $modelId;
-        if ($relations->count()) {
-            $this->vars['relations'] = $relations;
-        }
 
         return [
             '#popupActionContent' => $this->makePartial('$/waka/compilator/behaviors/wordbehavior/_content.htm'),
@@ -134,27 +101,10 @@ class WordBehavior extends ControllerBehavior
         if ($errors) {
             throw new \ValidationException(['error' => $errors]);
         }
-
         $docId = post('documentId');
         $modelId = post('modelId');
 
-        $dataSource = Document::find($docId)->data_source;
-        //On recherche la collection de relations si elle existe, sinon retourne null
-        $relations = $dataSource->getRelationCollection($modelId);
-
-        $additionalParams = "";
-        if ($relations) {
-            foreach ($relations as $relation) {
-                if (!post($relation['param'])) {
-                    throw new \ValidationException(['error' => 'il manque ' . $relation['param']]);
-                } else {
-                    $additionalParams .= '&' . $relation['param'] . '=' . post($relation['param']);
-                }
-
-            }
-        }
-
-        return Redirect::to('/backend/waka/compilator/documents/makeword/?docId=' . $docId . '&modelId=' . $modelId . $additionalParams);
+        return Redirect::to('/backend/waka/compilator/documents/makeword/?docId=' . $docId . '&modelId=' . $modelId);
 
     }
 
@@ -176,75 +126,32 @@ class WordBehavior extends ControllerBehavior
             return false;
         }
     }
-    public function validationAdditionalParams($field, $input, $fieldOption = null)
-    {
-        $rules = [
-            $field => 'required',
-        ];
-
-        $validator = \Validator::make([$input], $rules);
-
-        if ($validator->fails()) {
-            return $validator->messages()->first();
-        } else {
-            return false;
-        }
-    }
     /**
      * Cette fonction est utilisé lors du test depuis le controller document.
      */
     public function onLoadWordBehaviorForm()
     {
         $id = post('id');
-        $wp = new WordProcessor($id);
+        $wp = new WordProcessor2($id);
         $tags = $wp->checkTags();
-        return Redirect::to('/backend/waka/compilator/documents/makeword/?id=' . $id);
+        return Redirect::to('/backend/waka/compilator/documents/makeword/?docId=' . $id);
     }
     public function makeword()
     {
         $docId = post('docId');
         $modelId = post('modelId');
-        //On initialise le dataSource
-        $dataSource = Document::find($docId)->data_source;
-        //On recherche la collection de relations si elle existe, sinon retourne null
-        $relations = $dataSource->getRelationCollection($modelId);
-        $additionalParams = [];
-        //trace_log("Make Word");
-        if ($relations) {
-            //trace_log("Make Word Has relation");
-            foreach ($relations as $relation) {
-                $additionalParams[$relation['param']] = post($relation['param']);
-            }
-        }
-        //trace_log("Make Word AdditionalParams");
-        $wc = new WordCreator($docId);
-        $wc->setAdditionalParams($additionalParams);
+
+        $wc = new WordCreator2($docId);
+
         return $wc->renderWord($modelId);
     }
     public function onLoadWordCheck()
     {
         $id = post('id');
-        $wp = new WordProcessor($id);
+        $wp = new WordProcessor2($id);
         return $wp->checkDocument();
     }
 
-    // public function CheckWord($id){
-    //     $returnTag = WordProcessor::checkTags($id);
-    //     $model = Document::find($id);
-    //     if($model->has_informs('problem')) {
-    //         Flash::error('Le document à des erreurs');
-    //         return Redirect::refresh();
-    //     } else {
-    //         foreach($model->blocs as $bloc) {
-    //             if($bloc->has_informs('problem')) {
-    //                 Flash::error('Le document à des erreurs');
-    //                 return Redirect::refresh();
-    //             }
-    //         }
-
-    //     }
-    //     return $returnTag;
-    // }
     public function createWordBehaviorWidget()
     {
 
