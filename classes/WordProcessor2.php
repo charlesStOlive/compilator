@@ -39,6 +39,8 @@ class WordProcessor2
         //$this->AllBlocs = Bloc::get(['id', 'document_id', 'code', 'name']);
         //
         $document = Document::find($document_id);
+
+        trace_log($document_id);
         $this->document = $document;
         //
         $document_path = $this->getPath($this->document);
@@ -54,7 +56,6 @@ class WordProcessor2
     public function checkTags()
     {
         $allTags = $this->filterTags($this->templateProcessor->getVariables());
-        trace_log("Resultat des tags");
         trace_log($allTags);
         $create = $this->checkFunctions($allTags['fncs']);
         return $allTags;
@@ -73,8 +74,10 @@ class WordProcessor2
 
         $fnc_code = [];
         $subTags = [];
+        trace_log($tags);
         foreach ($tags as $tag) {
             // Si un / est détécté c'est une fin de bloc. on enregistre les données du bloc mais pas le tag
+            trace_log("Nouveau tag analysé : " . $tag);
             if (starts_with($tag, '/')) {
                 //trace_log("Fin de tag fnc_code");
                 $fnc_code['subTags'] = $subTags;
@@ -82,6 +85,7 @@ class WordProcessor2
 
                 array_push($fncs, $fnc_code);
                 $insideBlock = false;
+                trace_log("---------------------FIN----Inside bloc-------------------");
                 //reinitialisation du fnc_code et des subtags
                 $fnc_code = [];
                 $subTags = [];
@@ -90,12 +94,20 @@ class WordProcessor2
             } else {
                 // si on est dans un bloc on enregistre les subpart dans le bloc.
                 if ($insideBlock) {
+                    trace_log("On est inside un bloc");
                     $subParts = explode('.', $tag);
+                    $fncName = array_shift($subParts);
+                    $varName = array_shift($subParts);
+                    $image = array_shift($subParts);
+
                     $subBlocType = array_shift($subParts);
+                    $tagType = $image == 'IMAGE' ? true : false;
                     $subBlocTag = implode('.', $subParts);
                     $subTag = [
-                        'type' => $subBlocType,
-                        'tag' => $subBlocTag,
+                        'image' => $tagType,
+                        'tag' => $tag,
+                        'varName' => $varName,
+                        'fncName' => $fncName,
                     ];
                     array_push($subTags, $subTag);
                     continue;
@@ -128,12 +140,14 @@ class WordProcessor2
                     continue;
                 }
                 $fnc_code['code'] = array_shift($parts);
+                trace_log("nouvelle fonction : " . $fnc_code['code']);
                 if (!$fnc_code) {
                     $this->recordInform('warning', Lang::get('waka.compilator::lang.word.processor.bad_format') . ' : ' . $tag);
                     continue;
                 } else {
                     // on commence un bloc
                     $insideBlock = true;
+                    trace_log("-------------------------Inside bloc-------------------");
                 }
 
             }
@@ -178,7 +192,10 @@ class WordProcessor2
         }
         $i = 1;
         foreach ($wordFncs as $wordFnc) {
-            if (!in_array($wordFnc['code'], $docFncsCodes)) {
+            $fncCode = $wordFnc['code'] ?? false;
+            if (!$fncCode) {
+                $this->recordInform('problem', Lang::get("Une fonction n'a pas de code"));
+            } else if (!in_array($wordFnc['code'], $docFncsCodes)) {
                 //array_push($docFncs, ['functionCode' => $wordFnc, 'ready' => false, 'name' => "auto " . $wordFnc . " 1"]);
                 $this->recordInform('problem', "La fonction " . $wordFnc['code'] . " dans le document word n'est pas déclaré, veuillez la créer");
                 $i++;
