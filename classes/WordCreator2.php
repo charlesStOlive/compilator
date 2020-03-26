@@ -122,7 +122,7 @@ class WordCreator2 extends WordProcessor2
         $id = $idAndCrop_array[0];
         $crop = $idAndCrop_array[1] ?? 'fill';
 
-        $nameOrId = $this->listImages[$id];
+        $nameOrId = $this->listImages[$id] ?? null;
 
         if (!$nameOrId) {
             return null;
