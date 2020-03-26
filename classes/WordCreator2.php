@@ -2,26 +2,33 @@
 
 class WordCreator2 extends WordProcessor2
 {
+    use \Waka\Utils\Classes\Traits\ConvertPx;
 
     private $dataSourceModel;
     private $dataSourceId;
-    private $additionalParams;
-    private $dataSourceAdditionalParams;
+    private $listImages;
+    //private $additionalParams;
+    //private $dataSourceAdditionalParams;
 
     use \Waka\Cloudis\Classes\Traits\CloudisKey;
 
     public function prepareCreatorVars($dataSourceId)
     {
         $this->dataSourceModel = $this->linkModelSource($dataSourceId);
-        $this->dotedValues = $this->getDotedValues();
+        $this->dotedValues = $this->document->data_source->getDotedValues($dataSourceId);
 
+        $getAllPicturesFromDataSource = [];
+        $getAllPicturesFromDataSource['IMAGE'] = $this->document->data_source->getAllPictures($dataSourceId);
+        $this->listImages = array_dot($getAllPicturesFromDataSource);
+
+        trace_log($this->listImages);
     }
-    public function setAdditionalParams($additionalParams)
-    {
-        if ($additionalParams) {
-            $this->additionalParams = $additionalParams;
-        }
-    }
+    // public function setAdditionalParams($additionalParams)
+    // {
+    //     if ($additionalParams) {
+    //         $this->additionalParams = $additionalParams;
+    //     }
+    // }
     private function linkModelSource($dataSourceId)
     {
         $this->dataSourceId = $dataSourceId;
@@ -44,16 +51,17 @@ class WordCreator2 extends WordProcessor2
         }
         //trace_log("image Key ");
         //trace_log($originalTags['imagekeys']);
-        foreach ($originalTags['imagekeys'] as $imagekey) {
-            $tag = $this->getWordImageKey($imagekey);
-            $key = $this->cleanWordKey($tag);
-            $url = $this->decryptKeyedImage($key, $this->dataSourceModel);
+        foreach ($originalTags['IMAGE'] as $imagekey) {
+            $url = $this->getUrlFromImageKey($imagekey);
+            // $tag = $this->getWordImageKey($imagekey);
+            // $key = $this->cleanWordKey($tag);
+            // $url = $this->decryptKeyedImage($key, $this->dataSourceModel);
             if ($url) {
-                $this->templateProcessor->setImageValue($tag, $url);
+                $this->templateProcessor->setImageValue($imagekey, $url);
             }
         }
 
-        trace_log('traitement des fncs');
+        //trace_log('traitement des fncs');
         //Préparation des resultat de toutes les fonbctions
         $data = $this->document->data_source->getFunctionsCollections($this->dataSourceId, $this->document);
 
@@ -78,7 +86,7 @@ class WordCreator2 extends WordProcessor2
             //Parcours des lignes renvoyé par la fonctions
             foreach ($functionRows as $functionRow) {
                 $functionRow = array_dot($functionRow);
-                trace_log($functionRow);
+                //trace_log($functionRow);
                 foreach ($wordFnc['subTags'] as $subTag) {
                     //trace_log('**subtag***');
                     //trace_log($subTag);
@@ -105,22 +113,58 @@ class WordCreator2 extends WordProcessor2
         return response()->download($name . '.docx')->deleteFileAfterSend(true);
     }
 
-    public function getDotedValues()
+    public function getUrlFromImageKey($imageKey)
     {
-        $array = [];
-        // if ($this->additionalParams) {
-        //     if (count($this->additionalParams)) {
-        //         $rel = $this->document->data_source->getDotedRelationValues($this->dataSourceId, $this->additionalParams);
-        //         //trace_log($rel);
-        //         $array = array_merge($array, $rel);
-        //         trace_log($array);
-        //     }
-        // }
-        $rel = $this->document->data_source->getDotedValues($this->dataSourceId);
-        //trace_log($rel);
-        $array = array_merge($array, $rel);
+        $imageKey_array = explode(':', $imageKey);
+        $idAndCrop = $imageKey_array[0];
 
-        trace_log($array);
-        return $array;
+        $idAndCrop_array = explode('**', $idAndCrop);
+        $id = $idAndCrop_array[0];
+        $crop = $idAndCrop_array[1] ?? 'fill';
+
+        $nameOrId = $this->listImages[$id];
+
+        if (!$nameOrId) {
+            return null;
+        }
+
+        $width = $imageKey_array[1] ?? '165mm';
+        $height = $imageKey_array[2] ?? '165mm';
+
+        $is_montage = is_numeric($nameOrId);
+
+        $width = $this->convertStringToPx($width);
+        $height = $this->convertStringToPx($height);
+
+        trace_log("width : " . $width);
+        trace_log("height : " . $height);
+
+        $options = ['width' => $width, 'height' => $height, 'crop' => $crop];
+
+        if ($is_montage) {
+            return \Waka\Cloudis\Models\Montage::find($nameOrId)->getCloudiUrl($this->dataSourceId);
+        } else {
+            return \Cloudder::secureShow($nameOrId, $options);
+        }
+
     }
+
+    // public function getDotedValues()
+    // {
+    //     $array = [];
+    //     // if ($this->additionalParams) {
+    //     //     if (count($this->additionalParams)) {
+    //     //         $rel = $this->document->data_source->getDotedRelationValues($this->dataSourceId, $this->additionalParams);
+    //     //         //trace_log($rel);
+    //     //         $array = array_merge($array, $rel);
+    //     //         trace_log($array);
+    //     //     }
+    //     // }
+    //     $rel = $this->document->data_source->getDotedValues($this->dataSourceId);
+    //     //trace_log($rel);
+    //     $array = array_merge($array, $rel);
+
+    //     trace_log($array);
+    //     return $array;
+    // }
 }
