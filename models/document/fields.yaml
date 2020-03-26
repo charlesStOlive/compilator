@@ -17,38 +17,57 @@ fields:
         placeholder: waka.compilator::lang.document.data_source_placeholder
         type: relation
         select: name
-        span: left 
+        span: auto 
     data_source@update:
         label: waka.compilator::lang.document.data_source
         placeholder: waka.compilator::lang.document.data_source_placeholder
         type: relation
         select: name
-        span: left
+        span: auto
         disabled: true
-    scopes:
-        label: waka.compilator::lang.document.scopes
-        type: repeater
-        prompt: waka.compilator::lang.document.scopes_prompt
-        span: right
-        form:
-            fields:
-                target:
-                    label: waka.compilator::lang.document.scopes_target
-                id:
-                    label: waka.compilator::lang.document.scopes_field
-    # has_sectors_perso:
-    #     label: waka.compilator::lang.document.has_sectors_perso
-    #     type: checkbox
-    #     default: 0
-    # blocs@update:
-    #     type: partial
-    #     path: field_blocs
+    
     model_functions:
             label: Créer des collections à partir des fonctions du modèle
             type: functionslist
-    # analyze@update:
-    #     label: waka.compilator::lang.document.analyse
-    #     type: textarea
-    #     size: huge
+
+    scopes:
+        label: waka.compilator::lang.document.scopes.title
+        type: nestedform
+        form:
+            fields:
+                mode: 
+                    type: radio
+                    default: [all]
+                    cssClass: 'inline-options'
+                    options:
+                        all: Toutes les conditions doivent être vrai
+                        one: Une seul condition doit être vrai
+                conditions:
+                    label: waka.compilator::lang.document.scopes.conditions
+                    type: repeater
+                    prompt: waka.compilator::lang.document.scopes.prompt
+                    span: full
+                    form:
+                        fields:
+                            self: 
+                                label: waka.compilator::lang.document.scopes.self
+                                type: checkbox
+                                span: full
+                                default: true
+                            target:
+                                label: waka.compilator::lang.document.scopes.target
+                                commentAbove: waka.compilator::lang.document.scopes.target_com
+                                span: auto
+                                trigger:
+                                    action: disable
+                                    field: self
+                                    condition: checked
+                            ids:
+                                label: waka.compilator::lang.document.scopes.id
+                                type: taglist
+                                mode: array
+                                commentAbove: waka.compilator::lang.document.scopes.id_com
+                                span: auto
+
     
     
