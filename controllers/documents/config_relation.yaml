@@ -5,16 +5,16 @@
 
 
 
-blocs:
-    label: waka.compilator::lang.bloc.code
-    manage:
-        form: $/waka/compilator/models/bloc/fields.yaml
-    view:
-        list: $/waka/compilator/models/bloc/columns_for_document.yaml
-        toolbarButtons: delete
-        defaultSort:
-            column: sort_order
-            direction: asc
+# blocs:
+#     label: waka.compilator::lang.bloc.code
+#     manage:
+#         form: $/waka/compilator/models/bloc/fields.yaml
+#     view:
+#         list: $/waka/compilator/models/bloc/columns_for_document.yaml
+#         toolbarButtons: delete
+#         defaultSort:
+#             column: sort_order
+#             direction: asc
 
 
 

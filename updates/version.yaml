@@ -10,4 +10,7 @@
 1.2.0:
 - 'ajout de model founction'
 - create_documents_table_u120.php 
+1.2.1:
+  - 'clean unused table'
+  - clean_unused_121.php
   

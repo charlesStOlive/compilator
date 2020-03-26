@@ -147,15 +147,15 @@ class Plugin extends PluginBase
                 'permissions' => ['waka.compilator.admin'],
                 'order' => 1,
             ],
-            'bloc_types' => [
-                'label' => Lang::get('waka.compilator::lang.menu.bloc_type'),
-                'description' => Lang::get('waka.compilator::lang.menu.bloc_type_description'),
-                'category' => Lang::get('waka.compilator::lang.menu.settings_category'),
-                'icon' => 'icon-th-large',
-                'url' => Backend::url('waka/compilator/bloctypes'),
-                'permissions' => ['waka.compilator.admin'],
-                'order' => 1,
-            ],
+            // 'bloc_types' => [
+            //     'label' => Lang::get('waka.compilator::lang.menu.bloc_type'),
+            //     'description' => Lang::get('waka.compilator::lang.menu.bloc_type_description'),
+            //     'category' => Lang::get('waka.compilator::lang.menu.settings_category'),
+            //     'icon' => 'icon-th-large',
+            //     'url' => Backend::url('waka/compilator/bloctypes'),
+            //     'permissions' => ['waka.compilator.admin'],
+            //     'order' => 1,
+            // ],
         ];
     }
 }

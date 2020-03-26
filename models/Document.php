@@ -75,9 +75,7 @@ class Document extends Model
      * @var array Relations
      */
     public $hasOne = [];
-    public $hasMany = [
-        'blocs' => ['Waka\Compilator\Models\Bloc', 'delete' => true],
-    ];
+    public $hasMany = [];
     public $belongsTo = [
         'data_source' => ['Waka\Utils\Models\DataSource'],
     ];
