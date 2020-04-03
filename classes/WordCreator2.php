@@ -21,7 +21,7 @@ class WordCreator2 extends WordProcessor2
         $getAllPicturesFromDataSource['IMAGE'] = $this->document->data_source->getAllPictures($dataSourceId);
         $this->listImages = array_dot($getAllPicturesFromDataSource);
 
-        trace_log($this->listImages);
+        //trace_log($this->listImages);
     }
     // public function setAdditionalParams($additionalParams)
     // {
@@ -136,8 +136,8 @@ class WordCreator2 extends WordProcessor2
         $width = $this->convertStringToPx($width);
         $height = $this->convertStringToPx($height);
 
-        trace_log("width : " . $width);
-        trace_log("height : " . $height);
+        //trace_log("width : " . $width);
+        //trace_log("height : " . $height);
 
         $options = ['width' => $width, 'height' => $height, 'crop' => $crop];
 
@@ -157,14 +157,14 @@ class WordCreator2 extends WordProcessor2
     //     //         $rel = $this->document->data_source->getDotedRelationValues($this->dataSourceId, $this->additionalParams);
     //     //         //trace_log($rel);
     //     //         $array = array_merge($array, $rel);
-    //     //         trace_log($array);
+    //     //         //trace_log($array);
     //     //     }
     //     // }
     //     $rel = $this->document->data_source->getDotedValues($this->dataSourceId);
     //     //trace_log($rel);
     //     $array = array_merge($array, $rel);
 
-    //     trace_log($array);
+    //     //trace_log($array);
     //     return $array;
     // }
 }

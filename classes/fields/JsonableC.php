@@ -64,10 +64,10 @@ class JsonableC extends BaseC
             }
             switch ($type) {
                 case 'value':
-                    trace_log("Analuse de " . $key);
-                    trace_log($jsonData);
-                    trace_log($config);
-                    trace_log($config);
+                    //trace_log("Analuse de " . $key);
+                    //trace_log($jsonData);
+                    //trace_log($config);
+                    //trace_log($config);
                     //$fieldToReturn = new ValueC($jsonData, $key, $config, $this->blocOptions);
                     break;
                 case 'file':

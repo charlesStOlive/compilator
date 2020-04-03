@@ -88,7 +88,7 @@ class BaseC
                 foreach ($parents as $parent) {
                     $jsonCol = new Collection($parent[$this->savedValue]);
                     $value = $jsonCol->where('code', $this->jsonkey)->first()[$this->jsonvalue];
-                    trace_log($value);
+                    //trace_log($value);
                     if ($value) {
                         $this->value = $value;
                         break;
